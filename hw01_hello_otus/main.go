@@ -2,11 +2,10 @@ package main
 
 import "fmt"
 
+func reverse() {
+	fmt.Println("gd")
+}
 func main() {
 	// Place your code here.
 	reverse()
-}
-
-func reverse() {
-	fmt.Println("gd")
 }
