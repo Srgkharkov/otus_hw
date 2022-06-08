@@ -6,6 +6,6 @@ func reverse() {
 	fmt.Println("gd")
 }
 func main() {
-	// Place your code here.
+	// Place your code here.h
 	reverse()
 }
