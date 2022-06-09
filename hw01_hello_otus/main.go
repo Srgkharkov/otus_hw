@@ -1,11 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
 
-func reverse() {
-	fmt.Println("gd")
-}
+	"github.com/Srgkharkov/stringutil"
+)
+
 func main() {
 	// Place your code here.h
-	reverse()
+	Str := "Hello, OTUS!"
+	rStr := stringutil.Reverse(Str)
+	fmt.Println(rStr)
 }
