@@ -10,7 +10,7 @@ import (
 
 var ErrInvalidString = errors.New("invalid string")
 
-func concatandrepeatrune(strPtr *string, rune rune, count int) {
+func Concatandrepeatrune(strPtr *string, rune rune, count int) {
 	var str string
 	if rune == 0 {
 		return
@@ -34,7 +34,7 @@ func Unpack(str string) (string, error) {
 				cursymbol = c
 				isControl = false
 			} else {
-				concatandrepeatrune(&ostr, cursymbol, 1)
+				Concatandrepeatrune(&ostr, cursymbol, 1)
 				cursymbol = 0
 				isControl = true
 			}
@@ -44,7 +44,7 @@ func Unpack(str string) (string, error) {
 				return "", ErrInvalidString
 			}
 
-			concatandrepeatrune(&ostr, cursymbol, 1)
+			Concatandrepeatrune(&ostr, cursymbol, 1)
 			cursymbol = c
 			isControl = false
 		}
@@ -57,17 +57,12 @@ func Unpack(str string) (string, error) {
 					return "", ErrInvalidString
 				}
 
-				concatandrepeatrune(&ostr, cursymbol, int(c-'0'))
+				Concatandrepeatrune(&ostr, cursymbol, int(c-'0'))
 				cursymbol = 0
 			}
 		}
 	}
-	concatandrepeatrune(&ostr, cursymbol, 1)
+	Concatandrepeatrune(&ostr, cursymbol, 1)
 	println(ostr)
 	return ostr, nil
-}
-
-func main() {
-	str, _ := Unpack("F4dg")
-	fmt.Println(str)
 }
