@@ -1,7 +1,5 @@
 package hw02unpackstring
 
-//package hw02unpackstring
-
 import (
 	"errors"
 	"fmt"
