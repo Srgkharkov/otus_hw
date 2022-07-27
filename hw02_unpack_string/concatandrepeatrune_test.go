@@ -24,7 +24,6 @@ func TestConcatandrepeatrune(t *testing.T) {
 		t.Run(tc.inputstr, func(t *testing.T) {
 			str := tc.inputstr
 			Concatandrepeatrune(&str, tc.rune, tc.count)
-			//require.NoError(t, err)
 			require.Equal(t, tc.expected, str)
 		})
 	}
