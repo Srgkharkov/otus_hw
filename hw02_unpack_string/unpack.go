@@ -10,13 +10,13 @@ import (
 
 var ErrInvalidString = errors.New("invalid string")
 
-func Concatandrepeatrune(strPtr *string, rune rune, count int) {
+func Concatandrepeatrune(strPtr *string, symbol rune, count int) {
 	var str string
-	if rune == 0 {
+	if symbol == 0 {
 		return
 	}
 	for i := 0; i < count; i++ {
-		str += string(rune)
+		str += string(symbol)
 	}
 	*strPtr += str
 }
