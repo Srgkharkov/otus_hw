@@ -16,9 +16,9 @@ func Concatandrepeatrune(strPtr *string, rune rune, count int) {
 		return
 	}
 	for i := 0; i < count; i++ {
-		str = str + string(rune)
+		str += string(rune)
 	}
-	*strPtr = *strPtr + str
+	*strPtr += str
 }
 
 func Unpack(str string) (string, error) {
