@@ -17,7 +17,7 @@ type uniquewords struct {
 }
 
 func newuniquewords() uniquewords {
-	return uniquewords{make([]uniqueword, 0, 0), make(map[string]int)}
+	return uniquewords{make([]uniqueword, 0), make(map[string]int)}
 }
 
 func separatebyfields(text string) []string {
