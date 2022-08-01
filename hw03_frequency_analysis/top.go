@@ -22,16 +22,9 @@ func newuniquewords() uniquewords {
 
 func separatebyfields(text string) []string {
 	words := strings.Fields(text)
-	//re := regexp.MustCompile(`^[А-Я]`)
-	//if re.MatchString(word) {
-	//	word =
-	//}
 	reprep := regexp.MustCompile("[.,!?]$")
-	//reUp := regexp.MustCompile("^[А-Я]")
 	for i := range words {
 		words[i] = strings.ToLower(words[i])
-		//word = strings.ToLower(word)
-		//re := regexp.MustCompile("[.,!?]$")
 		if reprep.MatchString(words[i]) {
 			words[i] = reprep.ReplaceAllString(words[i], "")
 		}
@@ -73,7 +66,6 @@ func (uw *uniquewords) getwords(start int, end int) []string {
 	words := make([]string, 0, end-start+1)
 	for i := start; i <= end; i++ {
 		words = append(words, uw.uniquewords[i].word)
-		//str += uw.uniquewords[i].word
 	}
 	return words
 }
