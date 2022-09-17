@@ -30,17 +30,16 @@ func (lc *lruCache) Get(key Key) (interface{}, bool) {
 	return nil, false
 }
 
-func (lc *lruCache) DeleteOld() bool {
-	isDelete := false
-	for lc.queue.Len() > lc.capacity {
-		key := lc.queue.Back().Value.(cacheItem).key
-		lc.mu.Lock()
-		delete(lc.items, key)
-		lc.mu.Unlock()
-		lc.queue.Remove(lc.queue.Back())
-		isDelete = true
+func (lc *lruCache) DeleteOldestItem() bool {
+	if lc.queue.Len() <= 0 {
+		return false
 	}
-	return isDelete
+	key := lc.queue.Back().Value.(cacheItem).key
+	lc.mu.Lock()
+	delete(lc.items, key)
+	lc.mu.Unlock()
+	lc.queue.Remove(lc.queue.Back())
+	return true
 }
 
 func (lc *lruCache) Set(key Key, value interface{}) bool {
@@ -55,18 +54,16 @@ func (lc *lruCache) Set(key Key, value interface{}) bool {
 		lc.mu.Lock()
 		lc.items[key] = li
 		lc.mu.Unlock()
-		lc.DeleteOld()
+		for lc.queue.Len() > lc.capacity {
+			lc.DeleteOldestItem()
+		}
 	}
 	return found
 }
 
 func (lc *lruCache) Clear() {
 	for lc.queue.Len() > 0 {
-		key := lc.queue.Back().Value.(cacheItem).key
-		lc.mu.Lock()
-		delete(lc.items, key)
-		lc.mu.Unlock()
-		lc.queue.Remove(lc.queue.Back())
+		lc.DeleteOldestItem()
 	}
 }
 
