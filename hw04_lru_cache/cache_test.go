@@ -137,7 +137,3 @@ func TestCacheMultithreading(t *testing.T) {
 
 	wg.Wait()
 }
-
-func TestExpulsion(t *testing.T) {
-
-}
