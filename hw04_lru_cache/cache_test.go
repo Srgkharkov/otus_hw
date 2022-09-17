@@ -55,7 +55,7 @@ func TestCache(t *testing.T) {
 }
 
 func TestCacheMultithreading(t *testing.T) {
-	t.Skip() // Remove me if task with asterisk completed.
+	//t.Skip() // Remove me if task with asterisk completed.
 
 	c := NewCache(10)
 	wg := &sync.WaitGroup{}
@@ -76,4 +76,37 @@ func TestCacheMultithreading(t *testing.T) {
 	}()
 
 	wg.Wait()
+}
+
+func TestExpulsion(t *testing.T) {
+	t.Run("expulsion old items", func(t *testing.T) {
+		c := NewCache(3)
+
+		c.Set("aaa", 300)
+		c.Set("bbb", 300)
+		c.Set("ccc", 300)
+		c.Set("ddd", 300)
+		c.Set("eee", 300)
+
+		_, ok := c.Get("aaa")
+		require.False(t, ok)
+
+		_, ok = c.Get("bbb")
+		require.False(t, ok)
+
+		_, ok = c.Get("eee")
+		require.True(t, ok)
+
+		_, ok = c.Get("ccc")
+		require.True(t, ok)
+
+		_, ok = c.Get("eee")
+		require.True(t, ok)
+
+		c.Set("fff", 300)
+
+		_, ok = c.Get("ddd")
+		require.False(t, ok)
+
+	})
 }
