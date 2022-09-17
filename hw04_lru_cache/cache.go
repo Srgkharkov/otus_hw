@@ -50,15 +50,14 @@ func (lc *lruCache) Set(key Key, value interface{}) bool {
 	if found {
 		lc.queue.MoveToFront(item)
 		item.Value = cacheItem{key: key, value: value}
-		return true
 	} else {
 		li := lc.queue.PushFront(cacheItem{key: key, value: value})
 		lc.mu.Lock()
 		lc.items[key] = li
 		lc.mu.Unlock()
 		lc.DeleteOld()
-		return false
 	}
+	return found
 }
 
 func (lc *lruCache) Clear() {
