@@ -25,9 +25,6 @@ func (lc *lruCache) Get(key Key) (interface{}, bool) {
 	if found {
 		lc.queue.MoveToFront(item)
 		ci := item.Value.(cacheItem)
-		//if !ok {
-		//	return nil, false
-		//}
 		return ci.value, true
 	}
 	return nil, false
@@ -47,7 +44,6 @@ func (lc *lruCache) DeleteOld() bool {
 }
 
 func (lc *lruCache) Set(key Key, value interface{}) bool {
-	//c, err := value.(cacheItem)
 	lc.mu.Lock()
 	item, found := lc.items[key]
 	lc.mu.Unlock()
