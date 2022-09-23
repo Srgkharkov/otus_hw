@@ -1,7 +1,5 @@
 package hw04lrucache
 
-import "sync"
-
 type List interface {
 	Len() int
 	Front() *ListItem
@@ -19,7 +17,6 @@ type ListItem struct {
 }
 
 type list struct {
-	mu   sync.RWMutex
 	List           // Remove me after realization.
 	root *ListItem // sentinel list element, only &root, root.prev, and root.next are used
 	len  int       // current list length excluding (this) sentinel element
@@ -28,14 +25,10 @@ type list struct {
 }
 
 func (l *list) Len() int {
-	l.mu.RLock()
-	defer l.mu.RUnlock()
 	return l.len
 }
 
 func (l *list) Front() *ListItem {
-	l.mu.RLock()
-	defer l.mu.RUnlock()
 	if l.len == 0 {
 		return nil
 	}
@@ -43,8 +36,6 @@ func (l *list) Front() *ListItem {
 }
 
 func (l *list) Back() *ListItem {
-	l.mu.RLock()
-	defer l.mu.RUnlock()
 	if l.len == 0 {
 		return nil
 	}
@@ -54,8 +45,6 @@ func (l *list) Back() *ListItem {
 func (l *list) PushFront(v interface{}) *ListItem {
 	li := new(ListItem)
 	li.Value = v
-	l.mu.Lock()
-	defer l.mu.Unlock()
 	li.Next = l.root.Next
 	li.Prev = l.root
 	l.root.Next = li
@@ -71,8 +60,6 @@ func (l *list) PushFront(v interface{}) *ListItem {
 func (l *list) PushBack(v interface{}) *ListItem {
 	li := new(ListItem)
 	li.Value = v
-	l.mu.Lock()
-	defer l.mu.Unlock()
 	li.Next = l.root
 	li.Prev = l.root.Prev
 	l.root.Prev = li
@@ -86,16 +73,12 @@ func (l *list) PushBack(v interface{}) *ListItem {
 }
 
 func (l *list) Remove(li *ListItem) {
-	l.mu.Lock()
-	defer l.mu.Unlock()
 	li.Next.Prev = li.Prev
 	li.Prev.Next = li.Next
 	l.len--
 }
 
 func (l *list) MoveToFront(li *ListItem) {
-	l.mu.Lock()
-	defer l.mu.Unlock()
 	if li == l.root.Next {
 		return
 	}
