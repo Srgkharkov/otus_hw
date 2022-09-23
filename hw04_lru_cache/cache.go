@@ -1,5 +1,7 @@
 package hw04lrucache
 
+import "sync"
+
 type Key string
 
 type Cache interface {
@@ -9,11 +11,60 @@ type Cache interface {
 }
 
 type lruCache struct {
-	Cache // Remove me after realization.
-
+	Cache    // Remove me after realization.
+	mu       sync.Mutex
 	capacity int
 	queue    List
 	items    map[Key]*ListItem
+}
+
+func (lc *lruCache) Get(key Key) (interface{}, bool) {
+	lc.mu.Lock()
+	item, found := lc.items[key]
+	lc.mu.Unlock()
+	if found {
+		lc.queue.MoveToFront(item)
+		ci := item.Value.(cacheItem)
+		return ci.value, true
+	}
+	return nil, false
+}
+
+func (lc *lruCache) DeleteOldestItem() bool {
+	if lc.queue.Len() <= 0 {
+		return false
+	}
+	key := lc.queue.Back().Value.(cacheItem).key
+	lc.mu.Lock()
+	delete(lc.items, key)
+	lc.mu.Unlock()
+	lc.queue.Remove(lc.queue.Back())
+	return true
+}
+
+func (lc *lruCache) Set(key Key, value interface{}) bool {
+	lc.mu.Lock()
+	item, found := lc.items[key]
+	lc.mu.Unlock()
+	if found {
+		lc.queue.MoveToFront(item)
+		item.Value = cacheItem{key: key, value: value}
+	} else {
+		li := lc.queue.PushFront(cacheItem{key: key, value: value})
+		lc.mu.Lock()
+		lc.items[key] = li
+		lc.mu.Unlock()
+		for lc.queue.Len() > lc.capacity {
+			lc.DeleteOldestItem()
+		}
+	}
+	return found
+}
+
+func (lc *lruCache) Clear() {
+	for lc.queue.Len() > 0 {
+		lc.DeleteOldestItem()
+	}
 }
 
 type cacheItem struct {
