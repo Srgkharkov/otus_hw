@@ -32,8 +32,7 @@ func Run(tasks []Task, n, m int) error {
 		}()
 	}
 	for _, task := range tasks {
-		errcount = atomic.LoadUint32(&errcount)
-		if errcount >= errmax {
+		if atomic.LoadUint32(&errcount) >= errmax {
 			err = ErrErrorsLimitExceeded
 			break
 		}
