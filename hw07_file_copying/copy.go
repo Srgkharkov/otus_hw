@@ -13,12 +13,12 @@ import (
 var (
 	ErrUnsupportedFile       = errors.New("unsupported file")
 	ErrOffsetExceedsFileSize = errors.New("offset exceeds file size")
-	ErrCanNotOpenFile        = errors.New("Can not open file")
-	ErrNoDataRead            = errors.New("No data for read")
-	ErrLimitNotCorrect       = errors.New("Limit is not correct")
-	ErrCannotCreateFile      = errors.New("Can not create file")
-	ErrCopyFile              = errors.New("Err copy")
-	ErrSeek                  = errors.New("Err Seek")
+	ErrCanNotOpenFile        = errors.New("can not open file")
+	ErrNoDataRead            = errors.New("no data for read")
+	ErrLimitNotCorrect       = errors.New("limit is not correct")
+	ErrCannotCreateFile      = errors.New("can not create file")
+	ErrCopyFile              = errors.New("err copy")
+	ErrSeek                  = errors.New("err Seek")
 )
 
 func Copy(fromPath, toPath string, offset, limit int64) error {

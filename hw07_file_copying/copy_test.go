@@ -22,38 +22,37 @@ func Equal(a, b []byte) bool {
 
 func TestCopy(t *testing.T) {
 	t.Run("Successful copy", func(t *testing.T) {
-		fsrc, err := os.CreateTemp("", "sample")
-		assert.Nil(t, err, "Can not CreateTemp")
-		defer os.Remove(fsrc.Name())
-		fsrc.WriteString("Sergei Kharkov 27.09.2022, 19:41 HW5 is completed!\nSergei Kharkov 27.09.2022, 19:36 HW5 is completed!")
+		fsrc, err := os.OpenFile("./testdata/input.txt", os.O_RDONLY, 0755)
+		assert.Nil(t, err, "can not CreateTemp")
+		defer fsrc.Close()
 
 		fdst, err := os.CreateTemp("", "sample")
-		assert.Nil(t, err, "Can not CreateTemp")
+		assert.Nil(t, err, "can not CreateTemp")
 		defer os.Remove(fdst.Name())
 
 		err = Copy(fsrc.Name(), fdst.Name(), 0, 0)
-		assert.Nil(t, err, "Func Copy return error")
+		assert.Nil(t, err, "func Copy return error")
 
 		srcbytes, err := os.ReadFile(fsrc.Name())
-		assert.Nil(t, err, "Can not read source file")
+		assert.Nil(t, err, "can not read source file")
 
 		destbytes, err := os.ReadFile(fdst.Name())
-		assert.Nil(t, err, "Can not read destination file")
+		assert.Nil(t, err, "can not read destination file")
 
-		require.True(t, Equal(srcbytes, destbytes), "Not equal source file and destination file")
+		require.True(t, Equal(srcbytes, destbytes), "not equal source file and destination file")
 	})
 
 	t.Run("Offset more than size file", func(t *testing.T) {
-		fsrc, err := os.CreateTemp("", "sample")
-		defer os.Remove(fsrc.Name())
-		fsrc.WriteString("Sergei Kharkov 27.09.2022, 19:41 HW5 is completed!\nSergei Kharkov 27.09.2022, 19:36 HW5 is completed!")
+		fsrc, err := os.OpenFile("./testdata/input.txt", os.O_RDONLY, 0755)
+		assert.Nil(t, err, "can not CreateTemp")
+		defer fsrc.Close()
 
 		fdst, err := os.CreateTemp("", "sample")
-		assert.Nil(t, err, "Can not CreateTemp")
+		assert.Nil(t, err, "can not CreateTemp")
 		defer os.Remove(fdst.Name())
 
-		err = Copy(fsrc.Name(), fdst.Name(), 1000, 0)
+		err = Copy(fsrc.Name(), fdst.Name(), 10000, 0)
 
-		assert.Equal(t, ErrOffsetExceedsFileSize, err, "Expected ErrOffsetExceedsFileSize")
+		assert.Equal(t, ErrOffsetExceedsFileSize, err, "expected ErrOffsetExceedsFileSize")
 	})
 }
