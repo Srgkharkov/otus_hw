@@ -91,3 +91,51 @@ func TestPipeline(t *testing.T) {
 		require.Less(t, int64(elapsed), int64(abortDur)+int64(fault))
 	})
 }
+
+func TestWrap(t *testing.T) {
+	data := []int{1, 2, 3, 4, 5}
+
+	t.Run("wrap case without done", func(t *testing.T) {
+		in := make(Bi)
+		go func() {
+			defer close(in)
+			for _, v := range data {
+				in <- v
+			}
+		}()
+
+		result := make([]int, 0, len(data))
+
+		for val := range wrap(in, nil) {
+			result = append(result, val.(int))
+		}
+
+		require.Equal(t, data, result)
+	})
+
+	t.Run("wrap case with done", func(t *testing.T) {
+		in := make(Bi)
+		go func() {
+			defer close(in)
+			for _, v := range data {
+				in <- v
+			}
+		}()
+
+		result := make([]int, 0, len(data))
+		n := 2
+		requiredata := data[:n]
+		done := make(Bi)
+
+		for val := range wrap(in, done) {
+			result = append(result, val.(int))
+			n--
+			if n <= 0 {
+				close(done)
+				break
+			}
+		}
+
+		require.Equal(t, requiredata, result)
+	})
+}
